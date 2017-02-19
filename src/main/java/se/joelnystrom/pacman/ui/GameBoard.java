@@ -13,16 +13,8 @@ public class GameBoard extends JFrame {
 
         JFrame frame = new JFrame("PacMan");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
         frame.setFocusable(true);
 
-        JPanel gamePanel = new JPanel();
-        gamePanel.setBackground(Color.black);
-
-        JLabel gameLabel = new JLabel("Hello World");
-        gameLabel.setFont(new Font("Verdana",1,12));
-        gamePanel.add(gameLabel);
-        gamePanel.setBorder(new LineBorder(Color.white));
         /*
         JMenuBar gameMenuBar = new JMenuBar();
         JMenu gameMenu = new JMenu("Main Menu");
@@ -31,12 +23,29 @@ public class GameBoard extends JFrame {
         frame.setIconImage(new ImageIcon(imgURL).getImage());
         */
 
-        Dimension d = new Dimension(400, 400);
+        Dimension d = new Dimension(600, 600);
 
-        frame.add(gamePanel);
+        frame.add(gamePanel());
         frame.setSize(d);
         frame.setVisible(true);
         //frame.getContentPane().add(emptyLabel, BorderLayout.CENTER);
 
+    }
+
+    private JPanel gamePanel() {
+
+        JPanel gamePanel = new JPanel();
+
+        //Adding label with Hello World
+        JLabel gameLabel = new JLabel("Hello World");
+        gameLabel.setFont(new Font("Verdana",1,12));
+        gameLabel.setForeground(Color.white);
+
+        
+        gamePanel.setBackground(Color.black);
+        gamePanel.add(gameLabel);
+        gamePanel.setBorder(new LineBorder(Color.white));
+
+        return gamePanel;
     }
 }
