@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 import static se.joelnystrom.pacman.PacmanGame.*;
+import static se.joelnystrom.pacman.ui.GameBoard.Direction.*;
 
 /**
  * Created by jnys on 19/02/2017.
@@ -39,7 +40,21 @@ public class GameBoard extends JFrame {
         gamePanel.requestFocusInWindow();
     }
 
-    class  GamePanel extends JPanel {
+    public enum Direction {
+        NORTH (0,-1),
+        SOUTH (0, 1),
+        EAST (1, 0),
+        WEST (-1,0);
+
+        public final int dy, dx;
+
+        Direction(int dx, int dy) {
+            this.dx = dx;
+            this.dy = dy;
+        }
+    }
+
+    class  GamePanel extends JPanel implements ActionListener {
 
         RedSquare redSquare = new RedSquare();
 
@@ -61,59 +76,68 @@ public class GameBoard extends JFrame {
                 public void keyPressed(KeyEvent e) {
 
                     if(e.VK_DOWN == e.getKeyCode()) {
-                        moveSquare(0,BLOCK_SIZE);
+                        movePacman(SOUTH);
                     };
                     if (e.VK_UP == e.getKeyCode()) {
-                        moveSquare(0,-BLOCK_SIZE);
+                        movePacman(NORTH);
                     };
                     if (e.VK_LEFT == e.getKeyCode()) {
-                        moveSquare(-BLOCK_SIZE,0);
+                        movePacman(WEST);
                     };
                     if (e.VK_RIGHT == e.getKeyCode()) {
-                        moveSquare(BLOCK_SIZE,0);
+                        movePacman(EAST);
                     };
                 }
 
                 public void keyReleased(KeyEvent e) {
 
                 }
+
             };
             this.addKeyListener(keyListener);
-            this.add(gameLabel);
-            System.out.println(this.getWidth());
-        }
-            private void moveSquare(int x, int y) {
 
-                // Current square state, stored as final variables
-                // to avoid repeat invocations of the same methods.
+            Timer timer = new Timer(40, this);
+
+            this.add(gameLabel);
+        }
+            private void movePacman(Direction d) {
+
+                // movePacman x, y
+                //Can only turn 90 degrees at square position
+
                 final int CURR_X = redSquare.getX();
                 final int CURR_Y = redSquare.getY();
                 final int CURR_W = redSquare.getWidth();
                 final int CURR_H = redSquare.getHeight();
+                int new_x = CURR_X;
+                int new_y = CURR_Y;
 
-                System.out.print("Standing at: " + CURR_Y/BLOCK_SIZE + ", " + CURR_X/BLOCK_SIZE + "; ");
-                if (y+CURR_Y<0 || (y+CURR_Y)>=BOARD_SIZE){
-                    y = 0;
-                }else if (x+CURR_X<0 || (x+CURR_X)>=BOARD_SIZE){
-                    x = 0;
-                }else if ((GameLogic.checkMaze((CURR_X+x)/BLOCK_SIZE, (CURR_Y+y)/BLOCK_SIZE))){
-                    x = 0;
-                    y = 0;
+                //System.out.print("Standing at: " + CURR_X + ", " + CURR_Y + "; ");
+
+                int new_xpos = (CURR_X + d.dx*BLOCK_SIZE)/BLOCK_SIZE;
+                int new_ypos = (CURR_Y + d.dy*BLOCK_SIZE)/BLOCK_SIZE;
+
+                if (GameLogic.checkMaze(new_xpos, new_ypos)){
+                    //System.out.print("True, you can walk ");
+                    if ((CURR_Y % BLOCK_SIZE == 0) && (d.dy == 0)) {
+                        // At even pixel for Y, may turn 90
+                        System.out.println("right or left;");
+                        new_x = new_x + d.dx;
+                    }else if ((CURR_X % BLOCK_SIZE == 0) && (d.dx == 0 )) {
+                        // At even pixel for X, may turn 90
+                        System.out.println("up or down;");
+                        new_y = new_y+d.dy;
+                    }
+                    System.out.println("Moved to: " + new_x + ", " + new_y + "; ");
                 }
 
-                // The square is moving, repaint background
-                // over the old square location.
-                repaint(CURR_X,CURR_Y,CURR_W,CURR_H);
+                repaint(CURR_X, CURR_Y, CURR_W, CURR_H);
 
-                // Update coordinates.
-                redSquare.setX(CURR_X+x);
-                redSquare.setY(CURR_Y+y);
+                redSquare.setX(new_x);
+                redSquare.setY(new_y);
 
-                // Repaint the square at the new location.
-                System.out.println("Move to: " + redSquare.getY()/BLOCK_SIZE + ", " + redSquare.getX()/BLOCK_SIZE + "; ");
-                repaint(redSquare.getX(), redSquare.getY(),
-                        redSquare.getWidth(),
-                        redSquare.getHeight());
+                repaint(redSquare.getX(), redSquare.getY(), redSquare.getWidth(), redSquare.getHeight());
+
             }
 
         protected void paintComponent(Graphics g) {
@@ -130,12 +154,18 @@ public class GameBoard extends JFrame {
             }
         }
 
+        public void actionPerformed(ActionEvent e) {
+
+        }
+
         class RedSquare{
 
             private int xPos = BLOCK_SIZE;
             private int yPos = BLOCK_SIZE;
             private int width = BLOCK_SIZE;
             private int height = BLOCK_SIZE;
+
+            private Direction direction = NORTH;
 
             public void setX(int xPos){
                 this.xPos = xPos;
@@ -149,6 +179,10 @@ public class GameBoard extends JFrame {
                 this.yPos = yPos;
             }
 
+            public void setDirection(Direction d){
+                this.direction = d;
+            }
+
             public int getY(){
                 return yPos;
             }
@@ -159,6 +193,10 @@ public class GameBoard extends JFrame {
 
             public int getHeight(){
                 return height;
+            }
+
+            public Direction getDirection(){
+                return direction;
             }
 
             public void paintSquare(Graphics g){
