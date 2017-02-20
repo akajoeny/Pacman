@@ -1,15 +1,38 @@
 package se.joelnystrom.pacman.ui;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.Line2D;
 
 /**
  * Created by jnys on 19/02/2017.
  */
 public class GameBoard extends JFrame {
+
+    public static final int BOARD_SIZE = 512;
+    public final int N_BLOCKS = 16;
+    public final int BLOCK_SIZE = BOARD_SIZE/N_BLOCKS;
+    public final int SCORE = 100;
+
+    final int[][] maze = {
+            { 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0},
+            { 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0},
+            { 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0},
+            { 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0},
+            { 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0},
+            { 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0},
+            { 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0},
+            { 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0},
+            { 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0},
+            { 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0},
+            { 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0},
+            { 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0},
+            { 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+            { 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+            { 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+            { 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+    };
+
 
     public GameBoard() {
         super();
@@ -26,33 +49,26 @@ public class GameBoard extends JFrame {
         this.setIconImage(new ImageIcon(imgURL).getImage());
         */
 
-        Dimension d = new Dimension(600, 600);
+        Dimension d = new Dimension(BOARD_SIZE+N_BLOCKS, BOARD_SIZE+BLOCK_SIZE+10);
+        this.setSize(d);
 
         GamePanel gamePanel = new GamePanel();
         this.add(gamePanel);
         gamePanel.setFocusable(true);
-        this.setSize(d);
+
         this.setVisible(true);
         gamePanel.requestFocusInWindow();
-
-        //this.getContentPane().add(emptyLabel, BorderLayout.CENTER);
     }
 
     class  GamePanel extends JPanel {
 
-        final int BLOCK_SIZE = 24;
-        final int N_BLOCKS = 15;
-        final int SCREEN_SIZE = N_BLOCKS * BLOCK_SIZE;
-        int score = 0;
-
         RedSquare redSquare = new RedSquare();
 
-
         public GamePanel() {
-            JLabel gameLabel = new JLabel("Score: " + score);
+            JLabel gameLabel = new JLabel("Score: " + SCORE);
             gameLabel.setFont(new Font("Helvetica", 1, 12));
             gameLabel.setForeground(Color.white);
-            gameLabel.setSize(new Dimension(20, 20));
+            gameLabel.setSize(new Dimension(BOARD_SIZE, BLOCK_SIZE));
 
             this.setBackground(Color.black);
             this.setBorder(BorderFactory.createLineBorder(Color.red));
@@ -65,17 +81,16 @@ public class GameBoard extends JFrame {
                 public void keyPressed(KeyEvent e) {
 
                     if(e.VK_DOWN == e.getKeyCode()) {
-                        System.out.println("Pressed Down");
-                        moveSquare(0,5);
+                        moveSquare(0,BLOCK_SIZE);
                     };
                     if (e.VK_UP == e.getKeyCode()) {
-                        moveSquare(0,-5);
+                        moveSquare(0,-BLOCK_SIZE);
                     };
                     if (e.VK_LEFT == e.getKeyCode()) {
-                        moveSquare(-5,0);
+                        moveSquare(-BLOCK_SIZE,0);
                     };
                     if (e.VK_RIGHT == e.getKeyCode()) {
-                        moveSquare(5,0);
+                        moveSquare(BLOCK_SIZE,0);
                     };
                 }
 
@@ -84,8 +99,8 @@ public class GameBoard extends JFrame {
                 }
             };
             this.addKeyListener(keyListener);
-
             this.add(gameLabel);
+            System.out.println(this.getWidth());
         }
             private void moveSquare(int x, int y) {
 
@@ -95,43 +110,64 @@ public class GameBoard extends JFrame {
                 final int CURR_Y = redSquare.getY();
                 final int CURR_W = redSquare.getWidth();
                 final int CURR_H = redSquare.getHeight();
-                final int OFFSET = 1;
 
-                if ((CURR_X!=x) || (CURR_Y!=y)) {
-
-                    // The square is moving, repaint background
-                    // over the old square location.
-                    repaint(CURR_X,CURR_Y,CURR_W+OFFSET,CURR_H+OFFSET);
-
-                    // Update coordinates.
-                    //TODO:Ensure it does not move out of bounds
-                    redSquare.setX(CURR_X+x);
-                    redSquare.setY(CURR_Y+y);
-
-                    // Repaint the square at the new location.
-                    repaint(redSquare.getX(), redSquare.getY(),
-                            redSquare.getWidth()+OFFSET,
-                            redSquare.getHeight()+OFFSET);
+                System.out.print("Standing at: " + CURR_Y/BLOCK_SIZE + ", " + CURR_X/BLOCK_SIZE + "; ");
+                if (y+CURR_Y<0 || (y+CURR_Y)>=BOARD_SIZE){
+                    y = 0;
+                }else if (x+CURR_X<0 || (x+CURR_X)>=BOARD_SIZE){
+                    x = 0;
+                }else if ((checkMaze(CURR_X+x, CURR_Y+y))){
+                    x = 0;
+                    y = 0;
                 }
+
+                // The square is moving, repaint background
+                // over the old square location.
+                repaint(CURR_X,CURR_Y,CURR_W,CURR_H);
+
+                // Update coordinates.
+                redSquare.setX(CURR_X+x);
+                redSquare.setY(CURR_Y+y);
+
+                // Repaint the square at the new location.
+                System.out.println("Move to: " + redSquare.getY()/BLOCK_SIZE + ", " + redSquare.getX()/BLOCK_SIZE + "; ");
+                repaint(redSquare.getX(), redSquare.getY(),
+                        redSquare.getWidth(),
+                        redSquare.getHeight());
+            }
+
+            public boolean checkMaze(int dx, int dy) {
+
+                dx = dx/BLOCK_SIZE;
+                dy = dy/BLOCK_SIZE;
+
+                if (maze[dy][dx] == 1){
+                    return true;
+                }
+                return false;
             }
 
 
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-
-            // Draw Text
-            g.drawString("This is my custom Panel!",10,20);
-
             redSquare.paintSquare(g);
+            g.setColor(Color.WHITE);
 
+            for (int i=0;i<maze.length;i++){
+                for (int j=0;j<maze.length;j++) {
+                    if (maze[i][j] == 1) {
+                        g.fillRect(j*BLOCK_SIZE, i*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                    }
+                }
+            }
         }
 
         class RedSquare{
 
-            private int xPos = 50;
-            private int yPos = 50;
-            private int width = 20;
-            private int height = 20;
+            private int xPos = BLOCK_SIZE;
+            private int yPos = BLOCK_SIZE;
+            private int width = BLOCK_SIZE;
+            private int height = BLOCK_SIZE;
 
             public void setX(int xPos){
                 this.xPos = xPos;
@@ -166,24 +202,4 @@ public class GameBoard extends JFrame {
 
         }
     }
-
-    /*
-    private class GameInput implements KeyListener {
-        public void keyTyped(KeyEvent e) {}
-
-        public void keyReleased(KeyEvent e) {
-            if (e.getKeyCode() == e.VK_DOWN) key_down = false;
-            if (e.getKeyCode() == e.VK_UP) key_up = false;
-            if (e.getKeyCode() == e.VK_RIGHT) key_right = false;
-            if (e.getKeyCode() == e.VK_LEFT) key_left = false;
-        }
-
-        public void keyPressed(KeyEvent e) {
-            if (e.getKeyCode() == e.VK_DOWN) key_down = true;
-            if (e.getKeyCode() == e.VK_UP) key_up = true;
-            if (e.getKeyCode() == e.VK_RIGHT) key_right = true;
-            if (e.getKeyCode() == e.VK_LEFT) key_left = true;
-        }
-    }
-    */
 }
