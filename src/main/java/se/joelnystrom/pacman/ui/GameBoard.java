@@ -1,38 +1,17 @@
 package se.joelnystrom.pacman.ui;
 
+import se.joelnystrom.pacman.logic.GameLogic;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+
+import static se.joelnystrom.pacman.PacmanGame.*;
 
 /**
  * Created by jnys on 19/02/2017.
  */
 public class GameBoard extends JFrame {
-
-    public static final int BOARD_SIZE = 512;
-    public final int N_BLOCKS = 16;
-    public final int BLOCK_SIZE = BOARD_SIZE/N_BLOCKS;
-    public final int SCORE = 100;
-
-    final int[][] maze = {
-            { 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0},
-            { 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0},
-            { 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0},
-            { 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0},
-            { 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0},
-            { 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0},
-            { 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0},
-            { 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0},
-            { 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0},
-            { 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0},
-            { 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0},
-            { 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0},
-            { 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
-            { 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
-            { 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
-            { 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
-    };
-
 
     public GameBoard() {
         super();
@@ -65,6 +44,7 @@ public class GameBoard extends JFrame {
         RedSquare redSquare = new RedSquare();
 
         public GamePanel() {
+            final int SCORE = 0;
             JLabel gameLabel = new JLabel("Score: " + SCORE);
             gameLabel.setFont(new Font("Helvetica", 1, 12));
             gameLabel.setForeground(Color.white);
@@ -116,7 +96,7 @@ public class GameBoard extends JFrame {
                     y = 0;
                 }else if (x+CURR_X<0 || (x+CURR_X)>=BOARD_SIZE){
                     x = 0;
-                }else if ((checkMaze(CURR_X+x, CURR_Y+y))){
+                }else if ((GameLogic.checkMaze((CURR_X+x)/BLOCK_SIZE, (CURR_Y+y)/BLOCK_SIZE))){
                     x = 0;
                     y = 0;
                 }
@@ -135,18 +115,6 @@ public class GameBoard extends JFrame {
                         redSquare.getWidth(),
                         redSquare.getHeight());
             }
-
-            public boolean checkMaze(int dx, int dy) {
-
-                dx = dx/BLOCK_SIZE;
-                dy = dy/BLOCK_SIZE;
-
-                if (maze[dy][dx] == 1){
-                    return true;
-                }
-                return false;
-            }
-
 
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
