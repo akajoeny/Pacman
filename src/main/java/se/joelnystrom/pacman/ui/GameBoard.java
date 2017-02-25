@@ -59,6 +59,7 @@ public class GameBoard extends JFrame {
     class  GamePanel extends JPanel implements ActionListener {
 
         Character pacman = new Character(0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+        Character ghost = new Character(10*BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE);
 
         public GamePanel() {
             final int SCORE = 0;
@@ -168,6 +169,7 @@ public class GameBoard extends JFrame {
             }
 
             paintCharacter(pacman, g);
+            paintCharacter(ghost, g);
         }
 
         private void paintCharacter(Character c, Graphics g){
