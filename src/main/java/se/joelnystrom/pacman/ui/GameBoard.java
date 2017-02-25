@@ -14,29 +14,20 @@ import static se.joelnystrom.pacman.ui.GameBoard.Direction.*;
  */
 public class GameBoard extends JFrame {
 
+    private static final int BOARD_SIZE = 512;
+    private static final int N_BLOCKS = 16;
+    private static final int BLOCK_SIZE = BOARD_SIZE/N_BLOCKS;
+
     public GameBoard() {
         super();
         System.out.println("Created GUI on EDT? "+ SwingUtilities.isEventDispatchThread());
 
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setFocusable(true);
-
-        /*
-        JMenuBar gameMenuBar = new JMenuBar();
-        JMenu gameMenu = new JMenu("Main Menu");
-        gameMenuBar.add(gameMenu);
-        this.setJMenuBar(gameMenuBar);
-        this.setIconImage(new ImageIcon(imgURL).getImage());
-        */
-
-        Dimension d = new Dimension(BOARD_SIZE+N_BLOCKS, BOARD_SIZE+BLOCK_SIZE);
-        this.setSize(d);
-        this.setResizable(false);
-
+        Dimension d = new Dimension(BOARD_SIZE+8, BOARD_SIZE+BLOCK_SIZE);
         GamePanel gamePanel = new GamePanel();
-        this.add(gamePanel);
-        gamePanel.setFocusable(true);
 
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setSize(d);
+        this.add(gamePanel);
         this.setVisible(true);
         gamePanel.requestFocusInWindow();
     }
@@ -61,16 +52,19 @@ public class GameBoard extends JFrame {
         Character pacman = new Character(0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
         Character ghost = new Character(10*BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE);
 
-        public GamePanel() {
+        private GamePanel() {
             final int SCORE = 0;
             JLabel gameLabel = new JLabel("Score: " + SCORE);
             gameLabel.setFont(new Font("Helvetica", 1, 12));
             gameLabel.setForeground(Color.white);
             gameLabel.setSize(new Dimension(BOARD_SIZE, BLOCK_SIZE));
 
+            ghost.setCharacterColor(Color.RED);
+
             this.setBackground(Color.black);
             this.setBorder(BorderFactory.createLineBorder(Color.red));
 
+            //TODO: Move to own class
             KeyListener keyListener = new KeyListener() {
                 public void keyTyped(KeyEvent e) {
 

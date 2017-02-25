@@ -2,11 +2,7 @@ package se.joelnystrom.pacman;
 
 import se.joelnystrom.pacman.ui.GameBoard;
 
-public class PacmanGame
-{
-    public static final int BOARD_SIZE = 512;
-    public static final int N_BLOCKS = 16;
-    public static final int BLOCK_SIZE = BOARD_SIZE/N_BLOCKS;
+public class PacmanGame {
 
     public static final int[][] maze = {
             { 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -42,6 +38,7 @@ public class PacmanGame
     private static void pacmanGame() {
 
         GameBoard gameBoard = new GameBoard(); //Construct game board
+        gameBoard.setResizable(false);
 
     }
 }

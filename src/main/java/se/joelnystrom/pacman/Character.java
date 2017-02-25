@@ -39,6 +39,11 @@ public class Character {
     public int getH(){
         return height;
     }
+
+    public void setCharacterColor(Color c) {
+        this.characterColor = c;
+    }
+
     public int getW(){
         return width;
     }
