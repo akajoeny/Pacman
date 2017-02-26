@@ -1,17 +1,18 @@
 package se.joelnystrom.pacman.ui;
 
 import se.joelnystrom.pacman.Character;
-import se.joelnystrom.pacman.CharacterImages;
 import se.joelnystrom.pacman.Ghost;
 import se.joelnystrom.pacman.Pacman;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.net.URL;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import static se.joelnystrom.pacman.Maze.maze;
-import static se.joelnystrom.pacman.PacmanGame.*;
+import static se.joelnystrom.pacman.PacmanGame.ghostImage;
 import static se.joelnystrom.pacman.ui.GameBoard.Direction.*;
 
 /**
@@ -23,7 +24,7 @@ public class GameBoard extends JFrame {
     private static final int N_BLOCKS = 16;
     private static final int BLOCK_SIZE = BOARD_SIZE/N_BLOCKS;
 
-    Character pacman;
+    Character pacman = new Pacman(0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
     Character ghost = new Ghost(10*BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE, ghostImage);
 
     public GameBoard() {
@@ -33,7 +34,7 @@ public class GameBoard extends JFrame {
         Dimension d = new Dimension(BOARD_SIZE+8, BOARD_SIZE+BLOCK_SIZE);
         GamePanel gamePanel = new GamePanel();
 
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setSize(d);
         this.add(gamePanel);
         this.setVisible(true);
@@ -47,16 +48,16 @@ public class GameBoard extends JFrame {
 
     public void keyPressed(KeyEvent e) {
 
-        if(e.VK_DOWN == e.getKeyCode()) {
+        if(KeyEvent.VK_DOWN == e.getKeyCode()) {
             //movePacman(SOUTH);
         };
-        if (e.VK_UP == e.getKeyCode()) {
+        if (KeyEvent.VK_UP == e.getKeyCode()) {
             //movePacman(NORTH);
         };
-        if (e.VK_LEFT == e.getKeyCode()) {
+        if (KeyEvent.VK_LEFT == e.getKeyCode()) {
             //movePacman(WEST);
         };
-        if (e.VK_RIGHT == e.getKeyCode()) {
+        if (KeyEvent.VK_RIGHT == e.getKeyCode()) {
             //movePacman(EAST);
         };
     }
@@ -64,7 +65,7 @@ public class GameBoard extends JFrame {
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
 
-        if ((e.VK_LEFT == key) || (e.VK_UP == key) || (e.VK_DOWN == key) || (e.VK_RIGHT == key)){
+        if ((KeyEvent.VK_LEFT == key) || (KeyEvent.VK_UP == key) || (KeyEvent.VK_DOWN == key) || (KeyEvent.VK_RIGHT == key)){
         }
 
     }
@@ -86,7 +87,7 @@ public class GameBoard extends JFrame {
 
 
 
-    class  GamePanel extends JPanel implements ActionListener {
+    private class GamePanel extends JPanel implements ActionListener {
 
         private GamePanel() {
             final int SCORE = 0;
@@ -98,8 +99,6 @@ public class GameBoard extends JFrame {
             this.setBackground(Color.black);
             this.setBorder(BorderFactory.createLineBorder(Color.red));
 
-            pacman = new Pacman(0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE, pacmanImage);
-
             //TODO: Move to own class
             KeyListener keyListener = new KeyListener() {
                 public void keyTyped(KeyEvent e) {
@@ -108,16 +107,16 @@ public class GameBoard extends JFrame {
 
                 public void keyPressed(KeyEvent e) {
 
-                    if(e.VK_DOWN == e.getKeyCode()) {
+                    if(KeyEvent.VK_DOWN == e.getKeyCode()) {
                         movePacman(SOUTH);
                     };
-                    if (e.VK_UP == e.getKeyCode()) {
+                    if (KeyEvent.VK_UP == e.getKeyCode()) {
                         movePacman(NORTH);
                     };
-                    if (e.VK_LEFT == e.getKeyCode()) {
+                    if (KeyEvent.VK_LEFT == e.getKeyCode()) {
                         movePacman(WEST);
                     };
-                    if (e.VK_RIGHT == e.getKeyCode()) {
+                    if (KeyEvent.VK_RIGHT == e.getKeyCode()) {
                         movePacman(EAST);
                     };
                 }
@@ -125,7 +124,7 @@ public class GameBoard extends JFrame {
                 public void keyReleased(KeyEvent e) {
                     int key = e.getKeyCode();
 
-                    if ((e.VK_LEFT == key) || (e.VK_UP == key) || (e.VK_DOWN == key) || (e.VK_RIGHT == key)){
+                    if ((KeyEvent.VK_LEFT == key) || (KeyEvent.VK_UP == key) || (KeyEvent.VK_DOWN == key) || (KeyEvent.VK_RIGHT == key)){
                     }
 
                 }

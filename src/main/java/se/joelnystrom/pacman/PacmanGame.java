@@ -69,7 +69,6 @@ public class PacmanGame implements Runnable {
 
     public static void main( String[] args ) {
         ghostImage = CharacterImages.getGhost().getScaledInstance(32,32,0);
-        pacmanImage = CharacterImages.getPacman().getScaledInstance(32,32,0);
         PacmanGame pacmanGame = new PacmanGame();
 
         pacmanGame.start();

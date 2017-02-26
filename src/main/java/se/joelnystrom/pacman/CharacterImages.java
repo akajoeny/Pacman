@@ -1,7 +1,9 @@
 package se.joelnystrom.pacman;
 
-import javax.swing.*;
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.URL;
 
 /**
@@ -9,25 +11,32 @@ import java.net.URL;
  */
 public class CharacterImages {
 
-    private static final String basePath = "images/";
+    private static final String BASE_PATH = "images/";
+    public static final String GHOST = "ghost.png";
+    public static final String PACMAN = "pacman.png";
 
     public static Image getGhost() {
 
-        return getImage("ghost.png");
+        return getImage(GHOST);
     }
 
     public static Image getPacman(){
 
-        return getImage("pacman.png");
+        return getImage(PACMAN);
     }
 
-    private static Image getImage(String imageName) {
+    public static BufferedImage getImage(String imageName) {
 
-        URL filePath = CharacterImages.class.getClassLoader().getResource(basePath + imageName);
+        URL filePath = CharacterImages.class.getClassLoader().getResource(BASE_PATH + imageName);
 
         if (null == filePath) {
-            throw new RuntimeException("Jens not found: " + filePath);
+            throw new RuntimeException("Image not found: " + imageName);
         }
-        return new ImageIcon(filePath).getImage();
+        try {
+            return ImageIO.read(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
