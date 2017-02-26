@@ -10,10 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
-import static se.joelnystrom.pacman.PacmanGame.*;
-import static se.joelnystrom.pacman.PacmanGame.ghostImage;
 import static se.joelnystrom.pacman.ui.GameBoard.Direction.*;
 
 /**
@@ -28,7 +25,7 @@ public class GameBoard extends JFrame {
     private Maze maze = new Maze();
 
     Character pacman = new Pacman(0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
-    Character ghost = new Ghost(10*BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE, ghostImage);
+    Character ghost = new Ghost(10 * BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE);
 
     public GameBoard() {
         super();
@@ -78,43 +75,43 @@ public class GameBoard extends JFrame {
             setBackground(Color.black);
             this.setBorder(BorderFactory.createLineBorder(Color.red));
 
-            pacman = new Pacman(0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
-
-            //TODO: Move to own class
-            KeyListener keyListener = new KeyListener() {
-                public void keyTyped(KeyEvent e) {
-
-                }
-
-                public void keyPressed(KeyEvent e) {
-
-                    System.out.println("Here");
-
-                    if(KeyEvent.VK_DOWN == e.getKeyCode()) {
-                        movePacman(SOUTH);
-                    };
-                    if (KeyEvent.VK_UP == e.getKeyCode()) {
-                        movePacman(NORTH);
-                    };
-                    if (KeyEvent.VK_LEFT == e.getKeyCode()) {
-                        movePacman(WEST);
-                    };
-                    if (KeyEvent.VK_RIGHT == e.getKeyCode()) {
-                        movePacman(EAST);
-                    };
-                }
-
-                public void keyReleased(KeyEvent e) {
-                    int key = e.getKeyCode();
-
-                    if ((KeyEvent.VK_LEFT == key) || (KeyEvent.VK_UP == key) || (KeyEvent.VK_DOWN == key) || (KeyEvent.VK_RIGHT == key)){
-                    }
-
-                }
-
-            };
-            this.addKeyListener(keyListener);
+            this.setKeyBindings();
             this.add(gameLabel);
+        }
+
+        private void setKeyBindings() {
+            InputMap im = getInputMap(JPanel.WHEN_IN_FOCUSED_WINDOW);
+            ActionMap am = getActionMap();
+
+            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "RightArrow");
+            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "LeftArrow");
+            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "UpArrow");
+            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "DownArrow");
+
+            am.put("RightArrow", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    movePacman(EAST);
+                }
+            });
+            am.put("LeftArrow",new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    movePacman(WEST);
+                }
+            });
+            am.put("UpArrow", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    movePacman(NORTH);
+                }
+            });
+            am.put("DownArrow", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    movePacman(SOUTH);
+                }
+            });
         }
 
         private void movePacman(Direction d) {
