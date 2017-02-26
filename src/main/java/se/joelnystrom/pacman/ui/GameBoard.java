@@ -1,11 +1,16 @@
 package se.joelnystrom.pacman.ui;
 
 import se.joelnystrom.pacman.Character;
+import se.joelnystrom.pacman.CharacterImages;
+import se.joelnystrom.pacman.Ghost;
+import se.joelnystrom.pacman.Pacman;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.net.URL;
 
+import static se.joelnystrom.pacman.Maze.maze;
 import static se.joelnystrom.pacman.PacmanGame.*;
 import static se.joelnystrom.pacman.ui.GameBoard.Direction.*;
 
@@ -17,6 +22,9 @@ public class GameBoard extends JFrame {
     private static final int BOARD_SIZE = 512;
     private static final int N_BLOCKS = 16;
     private static final int BLOCK_SIZE = BOARD_SIZE/N_BLOCKS;
+
+    Character pacman;
+    Character ghost = new Ghost(10*BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE, ghostImage);
 
     public GameBoard() {
         super();
@@ -30,6 +38,35 @@ public class GameBoard extends JFrame {
         this.add(gamePanel);
         this.setVisible(true);
         gamePanel.requestFocusInWindow();
+    }
+
+    public void render(){
+        pacman.renderCharacter(getGraphics());
+        ghost.renderCharacter(getGraphics());
+    }
+
+    public void keyPressed(KeyEvent e) {
+
+        if(e.VK_DOWN == e.getKeyCode()) {
+            //movePacman(SOUTH);
+        };
+        if (e.VK_UP == e.getKeyCode()) {
+            //movePacman(NORTH);
+        };
+        if (e.VK_LEFT == e.getKeyCode()) {
+            //movePacman(WEST);
+        };
+        if (e.VK_RIGHT == e.getKeyCode()) {
+            //movePacman(EAST);
+        };
+    }
+
+    public void keyReleased(KeyEvent e) {
+        int key = e.getKeyCode();
+
+        if ((e.VK_LEFT == key) || (e.VK_UP == key) || (e.VK_DOWN == key) || (e.VK_RIGHT == key)){
+        }
+
     }
 
     public enum Direction {
@@ -47,10 +84,9 @@ public class GameBoard extends JFrame {
         }
     }
 
-    class  GamePanel extends JPanel implements ActionListener {
 
-        Character pacman = new Character(0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
-        Character ghost = new Character(10*BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE);
+
+    class  GamePanel extends JPanel implements ActionListener {
 
         private GamePanel() {
             final int SCORE = 0;
@@ -59,10 +95,10 @@ public class GameBoard extends JFrame {
             gameLabel.setForeground(Color.white);
             gameLabel.setSize(new Dimension(BOARD_SIZE, BLOCK_SIZE));
 
-            ghost.setCharacterColor(Color.RED);
-
             this.setBackground(Color.black);
             this.setBorder(BorderFactory.createLineBorder(Color.red));
+
+            pacman = new Pacman(0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE, pacmanImage);
 
             //TODO: Move to own class
             KeyListener keyListener = new KeyListener() {
@@ -96,9 +132,6 @@ public class GameBoard extends JFrame {
 
             };
             this.addKeyListener(keyListener);
-
-            //Timer timer = new Timer(40, this);
-
             this.add(gameLabel);
         }
 
@@ -109,12 +142,12 @@ public class GameBoard extends JFrame {
             final int CURR_Y = pacman.getY();
             int new_x = CURR_X;
             int new_y = CURR_Y;
-            int speed = BLOCK_SIZE/4;
+            double speed = BLOCK_SIZE/4;
 
             //System.out.print("Standing at: " + CURR_X + ", " + CURR_Y + "; ");
 
-            int new_xpos = (CURR_X + d.dx*speed);
-            int new_ypos = (CURR_Y + d.dy*speed);
+            int new_xpos = (int)(CURR_X + d.dx*speed);
+            int new_ypos = (int)(CURR_Y + d.dy*speed);
 
             int offset_x = (new_xpos % BLOCK_SIZE)*d.dx;
             int offset_y = (new_ypos % BLOCK_SIZE)*d.dy;
@@ -137,19 +170,20 @@ public class GameBoard extends JFrame {
                     if ((CURR_Y % BLOCK_SIZE == 0) && (d.dy == 0)) {
                         // At even pixel for Y, may turn 90, but not if wall up or down
                         //System.out.println("right or left;");
-                        new_x = new_x + d.dx * speed;
+                        new_x = (int)(new_x + d.dx * speed);
                     } else if ((CURR_X % BLOCK_SIZE == 0) && (d.dx == 0)) {
                         // At even pixel for X, may turn 90
                         //System.out.println("up or down;");
-                        new_y = new_y + d.dy * speed;
+                        new_y = (int)(new_y + d.dy * speed);
                     }
                 }
 
             }
-            removeCharacter(pacman,getGraphics());
+            removeCharacter(pacman, getGraphics());
             pacman.setX(new_x);
             pacman.setY(new_y);
-            paintCharacter(pacman,getGraphics());
+            //paintCharacter(pacman, getGraphics());
+            pacman.renderCharacter(getGraphics());
         }
 
         protected void paintComponent(Graphics g) {
@@ -163,8 +197,10 @@ public class GameBoard extends JFrame {
                 }
             }
 
-            paintCharacter(pacman, g);
-            paintCharacter(ghost, g);
+            //paintCharacter(pacman, g);
+            pacman.renderCharacter(g);
+            ghost.renderCharacter(g);
+            //paintCharacter(ghost, g);
         }
 
         private void paintCharacter(Character c, Graphics g){
