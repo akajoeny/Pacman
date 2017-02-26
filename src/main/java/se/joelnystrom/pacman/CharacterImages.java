@@ -15,15 +15,6 @@ public class CharacterImages {
     public static final String GHOST = "ghost.png";
     public static final String PACMAN = "pacman.png";
 
-    public static Image getGhost() {
-
-        return getImage(GHOST);
-    }
-
-    public static Image getPacman(){
-
-        return getImage(PACMAN);
-    }
 
     public static BufferedImage getImage(String imageName) {
 

@@ -8,7 +8,7 @@ public class PacmanGame implements Runnable {
 
     private boolean running = false;
     private Thread thread;
-    public static Image ghostImage = CharacterImages.getGhost().getScaledInstance(32,32,0);
+    public static Image ghostImage;
 
     private synchronized void start(){
         if(running)
@@ -67,7 +67,7 @@ public class PacmanGame implements Runnable {
     }
 
     public static void main( String[] args ) {
-        ghostImage = CharacterImages.getGhost().getScaledInstance(32,32,0);
+        ghostImage = CharacterImages.getImage(CharacterImages.GHOST);
         PacmanGame pacmanGame = new PacmanGame();
 
         pacmanGame.start();

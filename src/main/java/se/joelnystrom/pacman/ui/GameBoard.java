@@ -49,30 +49,6 @@ public class GameBoard extends JFrame {
         ghost.renderCharacter(getGraphics());
     }
 
-    public void keyPressed(KeyEvent e) {
-
-        if(KeyEvent.VK_DOWN == e.getKeyCode()) {
-            //movePacman(SOUTH);
-        };
-        if (KeyEvent.VK_UP == e.getKeyCode()) {
-            //movePacman(NORTH);
-        };
-        if (KeyEvent.VK_LEFT == e.getKeyCode()) {
-            //movePacman(WEST);
-        };
-        if (KeyEvent.VK_RIGHT == e.getKeyCode()) {
-            //movePacman(EAST);
-        };
-    }
-
-    public void keyReleased(KeyEvent e) {
-        int key = e.getKeyCode();
-
-        if ((KeyEvent.VK_LEFT == key) || (KeyEvent.VK_UP == key) || (KeyEvent.VK_DOWN == key) || (KeyEvent.VK_RIGHT == key)){
-        }
-
-    }
-
     public enum Direction {
         NORTH (0,-1),
         SOUTH (0, 1),
@@ -99,7 +75,7 @@ public class GameBoard extends JFrame {
             gameLabel.setForeground(Color.white);
             gameLabel.setSize(new Dimension(BOARD_SIZE, BLOCK_SIZE));
 
-            this.setBackground(Color.black);
+            setBackground(Color.black);
             this.setBorder(BorderFactory.createLineBorder(Color.red));
 
             pacman = new Pacman(0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
@@ -111,6 +87,8 @@ public class GameBoard extends JFrame {
                 }
 
                 public void keyPressed(KeyEvent e) {
+
+                    System.out.println("Here");
 
                     if(KeyEvent.VK_DOWN == e.getKeyCode()) {
                         movePacman(SOUTH);
@@ -186,18 +164,14 @@ public class GameBoard extends JFrame {
             removeCharacter(pacman, getGraphics());
             pacman.setX(new_x);
             pacman.setY(new_y);
-            //paintCharacter(pacman, getGraphics());
             pacman.renderCharacter(getGraphics());
         }
 
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-
             maze.render(g, BLOCK_SIZE);
-            //paintCharacter(pacman, g);
             pacman.renderCharacter(g);
             ghost.renderCharacter(g);
-            //paintCharacter(ghost, g);
         }
 
         private void paintCharacter(Character c, Graphics g){
