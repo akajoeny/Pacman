@@ -1,16 +1,14 @@
 package se.joelnystrom.pacman.ui;
 
 import se.joelnystrom.pacman.Character;
-import se.joelnystrom.pacman.CharacterImages;
 import se.joelnystrom.pacman.Ghost;
+import se.joelnystrom.pacman.Maze;
 import se.joelnystrom.pacman.Pacman;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.net.URL;
 
-import static se.joelnystrom.pacman.Maze.maze;
 import static se.joelnystrom.pacman.PacmanGame.*;
 import static se.joelnystrom.pacman.ui.GameBoard.Direction.*;
 
@@ -22,6 +20,8 @@ public class GameBoard extends JFrame {
     private static final int BOARD_SIZE = 512;
     private static final int N_BLOCKS = 16;
     private static final int BLOCK_SIZE = BOARD_SIZE/N_BLOCKS;
+
+    private Maze maze = new Maze();
 
     Character pacman;
     Character ghost = new Ghost(10*BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE, ghostImage);
@@ -165,7 +165,7 @@ public class GameBoard extends JFrame {
                     y_coord = y_coord + d.dy;
                 }
 
-                if (maze[y_coord][x_coord] == 0){
+                if (maze.check(x_coord, y_coord)){
                     //System.out.println("Maze is open at: " + (x_coord+1) + ", " + (y_coord+1) + "; ");
                     if ((CURR_Y % BLOCK_SIZE == 0) && (d.dy == 0)) {
                         // At even pixel for Y, may turn 90, but not if wall up or down
@@ -188,15 +188,8 @@ public class GameBoard extends JFrame {
 
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            g.setColor(Color.WHITE);
-            for (int i=0;i<maze.length;i++){
-                for (int j=0;j<maze.length;j++) {
-                    if (maze[i][j] == 1) {
-                        g.fillRect(j*BLOCK_SIZE, i*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
-                    }
-                }
-            }
 
+            maze.render(g, BLOCK_SIZE);
             //paintCharacter(pacman, g);
             pacman.renderCharacter(g);
             ghost.renderCharacter(g);
