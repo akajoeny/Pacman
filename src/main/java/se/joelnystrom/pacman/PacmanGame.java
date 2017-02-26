@@ -2,37 +2,36 @@ package se.joelnystrom.pacman;
 
 import se.joelnystrom.pacman.ui.GameBoard;
 
-import java.awt.*;
-
 public class PacmanGame implements Runnable {
 
     private boolean running = false;
     private Thread thread;
-    public static Image pacmanImage = CharacterImages.getPacman().getScaledInstance(32, 32, 0);
-    public static Image ghostImage = CharacterImages.getGhost().getScaledInstance(32,32,0);
 
     private synchronized void start(){
-        if(running)
+        if(running) {
             return;
-
+        }
         running = true;
         thread = new Thread(this);
         thread.start();
     }
 
     private synchronized void stop() {
-        if(!running)
+        if(!running) {
             return;
-
+        }
         running = false;
+
         try {
             thread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         System.exit(1);
     }
 
+    @Override
     public void run(){
         //This is the game loop
         GameBoard gameBoard = new GameBoard();
@@ -51,7 +50,7 @@ public class PacmanGame implements Runnable {
             lastTime = now;
             if (delta>= 1) {
                 //tick();
-                updates ++;
+                updates++;
                 delta--;
             }
             //gameBoard.render();
@@ -68,9 +67,7 @@ public class PacmanGame implements Runnable {
     }
 
     public static void main( String[] args ) {
-        ghostImage = CharacterImages.getGhost().getScaledInstance(32,32,0);
         PacmanGame pacmanGame = new PacmanGame();
-
         pacmanGame.start();
     }
 }
