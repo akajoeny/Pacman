@@ -27,7 +27,7 @@ public class Maze {
     };
 
     private Color color = Color.GRAY;
-    private Color brick = Color.WHITE;
+    private Color brick = Color.BLUE;
 
     public boolean check (int x, int y){
         if (labyrinth[y][x] == 0) {
@@ -44,8 +44,14 @@ public class Maze {
                     g.setColor(brick);
                     g.fillRect(j*size, i*size, size, size);
                     g.setColor(color);
-                    g.fillRect((j*size+size/2),i*size+size/2,size/2,size/2);
-                    g.fillRect(j*size,i*size,size/2,size/2);
+                    g.fillRect(j*size,i*size,size/4,size/4);
+                    g.fillRect(j*size + (2*size/4),i*size,size/4,size/4);
+                    g.fillRect(j*size,i*size + (2*size/4),size/4,size/4);
+                    g.fillRect(j*size + (2*size/4),i*size + (2*size/4),size/4,size/4);
+                    g.fillRect(j*size + (size/4),i*size + (size/4),size/4,size/4);
+                    g.fillRect(j*size + (size/4),i*size + (3*size/4),size/4,size/4);
+                    g.fillRect(j*size + (3*size/4),i*size + (size/4),size/4,size/4);
+                    g.fillRect(j*size + (3*size/4),i*size + (3*size/4),size/4,size/4);
                 }
             }
         }
