@@ -26,7 +26,7 @@ public class Maze {
             { 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0},
     };
 
-    public draw(Graphics g){
+    public void draw(Graphics g){
 
 
 
